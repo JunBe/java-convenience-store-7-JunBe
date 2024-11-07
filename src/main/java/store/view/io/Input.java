@@ -8,7 +8,7 @@ public class Input {
         return Console.readLine();
     }
 
-    public String lessThanPromotionQuantity(String itemName) {
+    public String canGetPromotionItem(String itemName) {
         System.out.println("현재" + itemName + "은(는) 1개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)");
         return Console.readLine();
     }

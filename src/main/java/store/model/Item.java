@@ -167,11 +167,17 @@ public class Item {
     }
 
     private int regularPurchase(int quantity) {
-        if (this.quantity < quantity) {
-            throw new IllegalArgumentException("재고가 부족합니다. 다시입력");
-            //입력 받고 quantity에 저장?
+        int remainingQuantity = quantity; //10 20
+        if (this.quantity < remainingQuantity) { // 오류상황
+            if (promotion.equals("null")) {
+                throw new IllegalArgumentException("재고가 부족합니다. 다시입력하세요");
+            }
+
+            remainingQuantity -= this.quantity;
+            this.quantity = 0;
+            return remainingQuantity;
         }
-        this.quantity -= quantity;
+        this.quantity -= remainingQuantity;
         return 0;
     }
 

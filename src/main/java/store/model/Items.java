@@ -58,10 +58,10 @@ public class Items {
                     int remainingQuantity = item.applyPromotion(inputItem.get(key));
                     inputItem.put(key, remainingQuantity);
                     if (inputItem.get(key) == 0) {
-                        return;
+                        break;
                     }
                     if (inputItem.get(key) < 0) {
-                        throw new IllegalArgumentException("재고가 0이하면 안돼");
+                        throw new IllegalArgumentException("재고가 0이하면 안됩니다.");
                     }
                 }
             }

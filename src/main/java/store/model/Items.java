@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class Items {
     private List<Item> items;
 
+
     public Items() {
         this.items = new ArrayList<>();
         create();
@@ -19,7 +20,11 @@ public class Items {
         List<List<String>> itemStock = parseItems();
 
         for (List<String> itemInfo : itemStock) {
-            items.add(new Item(itemInfo));
+            String name = itemInfo.get(0);
+            int price = Integer.parseInt(itemInfo.get(1));
+            int quantity = Integer.parseInt(itemInfo.get(2));
+            String promotion = itemInfo.get(3);
+            items.add(new Item(name, price, quantity, promotion));
         }
     }
 
@@ -36,25 +41,11 @@ public class Items {
         return items;
     }
 
-    public void printItem(int index) {
-        System.out.println(items.get(index));
+    public Item getItem(int index) {
+        return items.get(index);
     }
-
 
     public int size() {
         return items.size();
     }
-
-//    public int buyItem(String itemName, int quantity) {
-//        for (Item item : items) {
-//            if (item.getItemName().equals(itemName)) {
-//                quantity = item.buyLogic(quantity);
-//                System.out.println(item.getItemName()+" : "+item.getQuantity()+"개, 프로모션"+item.getPromotion());
-//                if (quantity == 0) {
-//                    return 0; //정상 종료
-//                }
-//            }
-//        }
-//        return 0;
-//    }
 }

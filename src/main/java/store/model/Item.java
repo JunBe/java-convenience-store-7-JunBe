@@ -26,14 +26,14 @@ public class Item {
     }
 
     public int applyPromotion(int requestedQuantity) {
+        //날짜 비교도 추가할것
         if (promotion.equals("탄산2+1")) {
-            int val = applyDrinkPromotion(requestedQuantity);
-            return val;
+            return applyDrinkPromotion(requestedQuantity);
         }
         if (promotion.equals("MD추천상품")) {
             return applyMdRecommendedPromotion(requestedQuantity);
         }
-        if (promotion.equals("반짝세일")) {
+        if (promotion.equals("반짝할인")) {
             return applyFlashDiscount(requestedQuantity);
         }
         if (promotion.equals("null")) {
@@ -72,7 +72,7 @@ public class Item {
     }
 
     private int askGetPromotionItem() {
-        String answer = view.input.lessThanPromotionQuantity(name);
+        String answer = view.input.canGetPromotionItem(name);
         if (answer.equals("Y")) {
             this.quantity -= 1;
             return 0;
@@ -103,12 +103,64 @@ public class Item {
 
     private int applyMdRecommendedPromotion(int quantity) {
         // MD 추천 상품 프로모션 로직 구현
-        return quantity;
+        bonusItem = 0;
+        int remainingQuantity = quantity;
+        while (this.quantity >= 2 && remainingQuantity >= 2) {
+            bonusItem++;
+            this.quantity -= 2;
+            remainingQuantity -= 2;
+        }
+
+        if (remainingQuantity == 0 || this.quantity == 0) {
+            return remainingQuantity;
+        }
+
+        if (this.quantity < remainingQuantity) {
+            return askBuyWithoutPromotion(remainingQuantity);
+        }
+        if (remainingQuantity == 1 && this.quantity == 1) {
+            this.quantity -= 1;
+            remainingQuantity -= 1;
+            return remainingQuantity;
+        }
+
+        if (remainingQuantity == 1) {
+            this.quantity -= 1;
+            return askGetPromotionItem();
+        }
+
+        return remainingQuantity;
     }
 
     private int applyFlashDiscount(int quantity) {
-        // 반짝 할인 프로모션 로직 구현
-        return quantity;
+        // 반짝 할인 상품 프로모션
+        bonusItem = 0;
+        int remainingQuantity = quantity;
+        while (this.quantity >= 2 && remainingQuantity >= 2) {
+            bonusItem++;
+            this.quantity -= 2;
+            remainingQuantity -= 2;
+        }
+
+        if (remainingQuantity == 0 || this.quantity == 0) {
+            return remainingQuantity;
+        }
+
+        if (this.quantity < remainingQuantity) {
+            return askBuyWithoutPromotion(remainingQuantity);
+        }
+        if (remainingQuantity == 1 && this.quantity == 1) {
+            this.quantity -= 1;
+            remainingQuantity -= 1;
+            return remainingQuantity;
+        }
+
+        if (remainingQuantity == 1) {
+            this.quantity -= 1;
+            return askGetPromotionItem();
+        }
+
+        return remainingQuantity;
     }
 
     private int regularPurchase(int quantity) {

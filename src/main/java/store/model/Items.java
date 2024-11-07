@@ -5,6 +5,7 @@ import store.util.MarkdownLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Items {
@@ -48,4 +49,24 @@ public class Items {
     public int size() {
         return items.size();
     }
+
+    //아이템 찾기 로직
+    public void findItem(Map<String, Integer> inputItem) {
+        for (String key : inputItem.keySet()) {
+            for (Item item : items) {
+                if (item.getName().equals(key)) {
+                    int remainingQuantity = item.applyPromotion(inputItem.get(key));
+                    inputItem.put(key, remainingQuantity);
+                    if (inputItem.get(key) == 0) {
+                        return;
+                    }
+                    if (inputItem.get(key) < 0) {
+                        throw new IllegalArgumentException("재고가 0이하면 안돼");
+                    }
+                }
+            }
+        }
+    }
+
+
 }

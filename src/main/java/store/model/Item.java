@@ -1,5 +1,6 @@
 package store.model;
 
+import store.service.DateCheck;
 import store.view.ConvenienceView;
 
 public class Item {
@@ -8,9 +9,11 @@ public class Item {
     private int quantity;
     private final String promotion;
 
+
     private int bonusItem = 0;
 
     private ConvenienceView view = new ConvenienceView();
+    private DateCheck dateCheck = new DateCheck();
 
     public Item(String name, int price, int quantity, String promotion) {
         this.name = name;
@@ -27,13 +30,13 @@ public class Item {
 
     public int applyPromotion(int requestedQuantity) {
         //날짜 비교도 추가할것
-        if (promotion.equals("탄산2+1")) {
+        if (promotion.equals("탄산2+1") && dateCheck.checkNowCanGet("탄산2+1")) {
             return applyDrinkPromotion(requestedQuantity);
         }
-        if (promotion.equals("MD추천상품")) {
+        if (promotion.equals("MD추천상품") && dateCheck.checkNowCanGet("MD추천상품")) {
             return applyMdRecommendedPromotion(requestedQuantity);
         }
-        if (promotion.equals("반짝할인")) {
+        if (promotion.equals("반짝할인") && dateCheck.checkNowCanGet("반짝할인")) {
             return applyFlashDiscount(requestedQuantity);
         }
         if (promotion.equals("null")) {

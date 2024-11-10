@@ -7,9 +7,6 @@ public class TwoPlusOnePromotion implements PromotionSelect{
     private static ConvenienceView view = new ConvenienceView();
     @Override
     public PromotionResult applyPromotion(Item item, int quantity,PromotionResult promotionResult) {
-        System.out.println("TwoPlusOnePromotion.applyPromotion 실행!");
-
-        //10 7 -> 4 1
         int quantityToCharge = 0;
         int bonusQuantity = 0;
         int remainStock = item.getQuantity(); //10

@@ -9,6 +9,7 @@ import store.service.Payment;
 
 public class Output {
     public void announceProduct(Items items) {
+        System.out.println();
         System.out.println("안녕하세요. W편의점입니다.");
         System.out.println("현재 보유하고 있는 상품입니다.");
         System.out.println();
@@ -27,14 +28,13 @@ public class Output {
                 continue;
             }
             System.out.println(String.format("- %s %,d원 재고 없음 %s", item.getName(), item.getPrice(), item.getPromotion()));
-
-
         }
         System.out.println();
 
     }
 
     public void receipt(Cart cart, Payment payment) {
+        System.out.println();
         System.out.println("==============W 편의점================");
         System.out.printf("%10s %10s %10s%n", "상품명", "수량", "금액");
 

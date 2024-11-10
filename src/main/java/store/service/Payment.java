@@ -13,13 +13,6 @@ public class Payment {
     private int promotionPrice=0;
     private Cart cart;
 
-    public Payment(int totalPrice, int bonusPrice, int membershipDiscount, int totalCount) {
-        this.totalPrice = totalPrice;
-        this.bonusPrice = bonusPrice;
-        this.membershipDiscount = membershipDiscount;
-        this.totalCount = totalCount;
-    }
-
     public Payment(Cart cart) {
         this.cart = cart;
     }
@@ -68,10 +61,7 @@ public class Payment {
 
     }
     public void membershipDiscount(int membershipDiscountRate) {
-        //멤버십할인계산
-        System.out.println(membershipDiscountRate);
         membershipDiscount = (totalPrice - promotionPrice) * membershipDiscountRate / 100;
-        System.out.println(membershipDiscount);
         membershipDiscount = Math.min(membershipDiscount, 8000);
     }
 }

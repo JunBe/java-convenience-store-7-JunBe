@@ -46,4 +46,13 @@ public class Validator {
         }
     }
 
+    public static String[] validateString(String item) {
+        String[] parse;
+        try {
+            parse = item.substring(1, item.length() - 1).split("-");
+        } catch (StringIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT.getError());
+        }
+        return parse;
+    }
 }

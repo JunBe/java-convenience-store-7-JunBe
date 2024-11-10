@@ -51,10 +51,6 @@ public class Application {
                 }
             }
 
-            //목록 출력
-//        for (Item item : items.getItems()) {
-//            System.out.println(item);
-//        }
 
             //멤버십 할인
             int membershipDiscountRate = 0;
@@ -134,7 +130,7 @@ public class Application {
             String[] split = view.input.itemNameAndQuantity().split(",");
             try {
                 for (String item : split) {
-                    String[] parse = item.substring(1, item.length() - 1).split("-");
+                    String[] parse = Validator.validateString(item);
                     Validator.validateInputItem(parse);
                     itemInfo.put(parse[0], itemInfo.getOrDefault(parse[0], 0) + Integer.parseInt(parse[1]));
                 }

@@ -19,7 +19,6 @@ public class Item {
         return quantity;
     }
 
-
     public Item(String name, int price, int quantity, String promotion) {
         this.name = name;
         this.price = price;
@@ -38,4 +37,7 @@ public class Item {
     }
 
 
+    public int getPrice() {
+        return price;
+    }
 }

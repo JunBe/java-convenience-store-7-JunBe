@@ -30,7 +30,6 @@ public class PromotionService {
 
         PromotionSelect promotion = promotionSelect.get(item.getPromotion());
         if (!dateCheck.checkNowCanGet(item.getPromotion())) {
-            System.out.println("기간이 종료됐습니다. " + item.getPromotion());
             promotion = promotionSelect.get("null");
         }
 

@@ -13,7 +13,7 @@ public class RegularPurchase implements PromotionSelect {
         int remainBuyQuantity = quantity; //7
         if (remainStock < remainBuyQuantity) { // 오류상황 10 11 5 6
             if (item.getPromotion().equals("null")) {
-                throw new IllegalArgumentException("재고가 부족합니다. 다시입력하세요");
+                throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
             }
             quantityToCharge += remainStock;
             remainBuyQuantity -= remainStock;

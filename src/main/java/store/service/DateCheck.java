@@ -3,11 +3,9 @@ package store.service;
 import camp.nextstep.edu.missionutils.DateTimes;
 import store.util.MarkdownLoader;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,8 +32,6 @@ public class DateCheck {
 
             LocalDateTime startDate = LocalDateTime.of(Integer.parseInt(start[0]),Integer.parseInt(start[1]),Integer.parseInt(start[2]),0,0,0);
             LocalDateTime endDate = LocalDateTime.of(Integer.parseInt(end[0]), Integer.parseInt(end[1]), Integer.parseInt(end[2]), 23, 59, 59);
-            System.out.println("startDate = " + startDate);
-            System.out.println("endDate = " + endDate);
             if (now.isAfter(startDate) && now.isBefore(endDate)) {
                 return true;
             }

@@ -44,45 +44,15 @@ public class Application {
                             cart.addItem(item.getName(), result.getQuantityToCharge(), result.getBonusQuantity(), item.getPrice(), item.getPromotion());
                             break;
                         }
-//                        if (inputItem.get(key) < 0) {
-//                            throw new IllegalArgumentException("재고가 0이하면 안됩니다.");
-//                        }
                     }
                 }
             }
 
+            //멤버십 할인 및 계산
+            Payment payment = new Payment(cart);
+            payment.membershipSale();
 
-            //멤버십 할인
-            int membershipDiscountRate = 0;
-            String membership = view.input.applyMembershipSaleOrNot();
-            if (membership.equalsIgnoreCase("Y")) {
-                membershipDiscountRate = 30;
-            }
-
-            //계산
-            int totalPrice = 0; //총 구매액
-            int bonusPrice = 0; //프로모션 제품 가격
-            int totalCount = 0; //총 구매 수
-            int promotionPrice = 0; // 프로모션 전체 가격
-            int membershipDiscount = 0; //멤버십 할인
-            for (String key : cart.getFreeOrder().keySet()) {
-                totalCount += cart.getOrder().get(key);
-                totalPrice += cart.getOrder().get(key) * cart.getPrice().get(key);
-                bonusPrice += cart.getFreeOrder().get(key) * cart.getPrice().get(key);
-                //멤버십 할인 위함
-                if (cart.getFreeOrder().get(key) > 0) {
-                    promotionPrice += bonusPrice * cart.getPromotion().get(key);
-                }
-
-            }
-
-            //멤버십할인계산
-            membershipDiscount = (totalPrice - promotionPrice) * membershipDiscountRate / 100;
-            membershipDiscount = Math.min(membershipDiscount, 8000);
-
-            Payment payment = new Payment(totalPrice,bonusPrice,membershipDiscount,totalCount);
-
-            //영수증
+            //영수증 출력
             view.output.receipt(cart, payment);
 
             //추가 구매

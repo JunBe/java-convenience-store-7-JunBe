@@ -32,47 +32,10 @@ public class Application {
             //사용자에게 구입할 물품 입력받기 ex) [콜라-11],[사이다-2]
             Map<String, Integer> inputItem = inputNameAndQuantity();
             inputItem = checkNoExistItem(inputItem, items);
-            //[사이다-1],[콜라-10]
-//            while (true) {
-//                for (String key : inputItem.keySet()) {
-//                    try {
-//                        int totalStock = 0;
-//                        for (Item item : items.getItems()) {
-//                            if (item.getName().equals(key)) {
-//                                totalStock += item.getQuantity();
-//                                if (totalStock < inputItem.get(key) && item.getPromotion().equals("null")) {
-//                                    throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
-//                                }
-//                            }
-//                        }
-//                    } catch (IllegalArgumentException e) {
-//                        System.out.println(e.getMessage());
-//                        inputItem = inputNameAndQuantity();
-//                    }
-//                }
-//                break;
-//            }
+            inputItem = checkOutOfStock(inputItem, items);
 
             //--------------------------------- Items에 있는 Item 탐색하며 구입할 물품 찾기
             for (String key : inputItem.keySet()) {
-                //재고 수량 초과 로직
-                try {
-                    int totalStock = 0;
-                    for (Item item : items.getItems()) {
-                        if (item.getName().equals(key)) {
-                            totalStock += item.getQuantity();
-                            if (totalStock < inputItem.get(key) && item.getPromotion().equals("null")) {
-//                                throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
-                                System.out.println(ErrorMessage.OVER_STOCK.getError());
-                            }
-                        }
-                    }
-                } catch (IllegalArgumentException e) {
-                    System.out.println(e.getMessage());
-                    inputItem = inputNameAndQuantity();
-                }
-
-
                 for (Item item : items.getItems()) {
                     if (item.getName().equals(key)) { // 아이템 찾기
                         PromotionResult result = promotionService.applyPromotion(item, inputItem.get(key));
@@ -81,9 +44,9 @@ public class Application {
                             cart.addItem(item.getName(), result.getQuantityToCharge(), result.getBonusQuantity(), item.getPrice(), item.getPromotion());
                             break;
                         }
-                        if (inputItem.get(key) < 0) {
-                            throw new IllegalArgumentException("재고가 0이하면 안됩니다.");
-                        }
+//                        if (inputItem.get(key) < 0) {
+//                            throw new IllegalArgumentException("재고가 0이하면 안됩니다.");
+//                        }
                     }
                 }
             }
@@ -143,6 +106,19 @@ public class Application {
         while (true) {
             try {
                 Validator.noExistItem(inputItem, items);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                inputItem = inputNameAndQuantity();
+            }
+        }
+        return inputItem;
+    }
+
+    private static Map<String, Integer> checkOutOfStock(Map<String, Integer> inputItem, Items items) {
+        while (true) {
+            try {
+                Validator.outOfStock(inputItem, items);
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());

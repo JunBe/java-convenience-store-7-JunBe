@@ -22,7 +22,6 @@ public class PromotionService {
         promotionSelect.put("null", new RegularPurchase());
     }
 
-    //item={[콜라,10,3000,2+1]} , 7
     public PromotionResult applyPromotion(Item item, int quantity) {
         if (promotionResult.getRemainBuyQuantity() == 0) {
             promotionResult = new PromotionResult(0, 0, 0, quantity);
@@ -33,14 +32,8 @@ public class PromotionService {
             promotion = promotionSelect.get("null");
         }
 
-        if (promotion == null) {
-            throw new IllegalArgumentException("[ERROR] 프로모션이 입력되지 않았습니다.");
-        }
-
         promotionResult = promotion.applyPromotion(item, quantity, promotionResult); //TwpPlusOnePromotion.applyPromotion(item,7)
-        PromotionResult finalResult = stockManage.updateStock(item, promotionResult);
-
-        return finalResult;
+        return stockManage.updateStock(item, promotionResult);
     }
 
 }

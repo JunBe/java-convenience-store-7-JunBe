@@ -1,4 +1,4 @@
-package store;
+package tdd;
 
 import camp.nextstep.edu.missionutils.DateTimes;
 import org.assertj.core.api.Assertions;

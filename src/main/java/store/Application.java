@@ -63,14 +63,12 @@ public class Application {
             int totalPrice = 0; //총 구매액
             int bonusPrice = 0; //프로모션 제품 가격
             int totalCount = 0; //총 구매 수
-            int bonusCount = 0; //증정 제품 수 /필요없음
             int promotionPrice = 0; // 프로모션 전체 가격
             int membershipDiscount = 0; //멤버십 할인
             for (String key : cart.getFreeOrder().keySet()) {
                 totalCount += cart.getOrder().get(key);
-                bonusCount += cart.getFreeOrder().get(key);
                 totalPrice += cart.getOrder().get(key) * cart.getPrice().get(key);
-                bonusPrice += bonusCount * cart.getPrice().get(key);
+                bonusPrice += cart.getFreeOrder().get(key) * cart.getPrice().get(key);
                 //멤버십 할인 위함
                 if (cart.getFreeOrder().get(key) > 0) {
                     promotionPrice += bonusPrice * cart.getPromotion().get(key);

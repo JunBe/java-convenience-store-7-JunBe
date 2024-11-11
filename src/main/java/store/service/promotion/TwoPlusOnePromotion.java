@@ -10,40 +10,29 @@ public class TwoPlusOnePromotion implements PromotionSelect{
     @Override
     public PromotionResult applyPromotion(Item item, int quantity, PromotionResult promotionResult) {
         StockManagement stock = new StockManagement(0, 0, item.getQuantity(), quantity);
+        return getPromotionResult(item, promotionResult, stock);
+    }
 
-        while (stock.getRemainStock() >= 3 && stock.getRemainBuyQuantity() >= 3) {
-            stock.setBonusQuantity(stock.getBonusQuantity() + 1);
-            stock.setQuantityToCharge(stock.getQuantityToCharge() + 3);
-            stock.setRemainStock(stock.getRemainStock() - 3);
-            stock.setRemainBuyQuantity(stock.getRemainBuyQuantity() - 3);
-        }
+    private static PromotionResult getPromotionResult(Item item, PromotionResult promotionResult, StockManagement stock) {
+        flow1(stock);
 
-        if (stock.getRemainStock() == 0 || stock.getRemainBuyQuantity() == 0) {
-            promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
-            return promotionResult;
-        }
+        PromotionResult flow2 = flow2(promotionResult, stock);
+        if (flow2 != null) return flow2;
 
-        if (stock.getRemainStock() <= stock.getRemainBuyQuantity()) {
-            if (askBuyWithoutPromotion(item.getName(), stock.getRemainBuyQuantity())) {
-                stock.setQuantityToCharge(stock.getQuantityToCharge() + stock.getRemainStock());
-                stock.setRemainBuyQuantity(stock.getRemainBuyQuantity() - stock.getRemainStock());
-                stock.setRemainStock(0);
-                promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
-                return promotionResult;
-            }
-            stock.setRemainBuyQuantity(0);
-            promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
-            return promotionResult;
-        }
+        PromotionResult flow3 = flow3(item, promotionResult, stock);
+        if (flow3 != null) return flow3;
 
-        if (stock.getRemainBuyQuantity() == 1) {
-            stock.setQuantityToCharge(stock.getQuantityToCharge() + 1);
-            stock.setRemainBuyQuantity(stock.getRemainBuyQuantity() - 1);
-            stock.setRemainStock(stock.getRemainStock() - 1);
-            promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
-            return promotionResult;
-        }
+        PromotionResult flow4 = flow4(promotionResult, stock);
+        if (flow4 != null) return flow4;
 
+        PromotionResult flow5 = flow5(item, promotionResult, stock);
+        if (flow5 != null) return flow5;
+
+        promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
+        return promotionResult;
+    }
+
+    private static PromotionResult flow5(Item item, PromotionResult promotionResult, StockManagement stock) {
         if (stock.getRemainBuyQuantity() == 2) {
             stock.setQuantityToCharge(stock.getQuantityToCharge() + 2);
             stock.setRemainBuyQuantity(stock.getRemainBuyQuantity() - 2);
@@ -57,10 +46,53 @@ public class TwoPlusOnePromotion implements PromotionSelect{
             promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
             return promotionResult;
         }
-
-        promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
-        return promotionResult;
+        return null;
     }
+
+    private static PromotionResult flow4(PromotionResult promotionResult, StockManagement stock) {
+        if (stock.getRemainBuyQuantity() == 1) {
+            stock.setQuantityToCharge(stock.getQuantityToCharge() + 1);
+            stock.setRemainBuyQuantity(stock.getRemainBuyQuantity() - 1);
+            stock.setRemainStock(stock.getRemainStock() - 1);
+            promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
+            return promotionResult;
+        }
+        return null;
+    }
+
+    private static PromotionResult flow3(Item item, PromotionResult promotionResult, StockManagement stock) {
+        if (stock.getRemainStock() <= stock.getRemainBuyQuantity()) {
+            if (askBuyWithoutPromotion(item.getName(), stock.getRemainBuyQuantity())) {
+                stock.setQuantityToCharge(stock.getQuantityToCharge() + stock.getRemainStock());
+                stock.setRemainBuyQuantity(stock.getRemainBuyQuantity() - stock.getRemainStock());
+                stock.setRemainStock(0);
+                promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
+                return promotionResult;
+            }
+            stock.setRemainBuyQuantity(0);
+            promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
+            return promotionResult;
+        }
+        return null;
+    }
+
+    private static PromotionResult flow2(PromotionResult promotionResult, StockManagement stock) {
+        if (stock.getRemainStock() == 0 || stock.getRemainBuyQuantity() == 0) {
+            promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
+            return promotionResult;
+        }
+        return null;
+    }
+
+    private static void flow1(StockManagement stock) {
+        while (stock.getRemainStock() >= 3 && stock.getRemainBuyQuantity() >= 3) {
+            stock.setBonusQuantity(stock.getBonusQuantity() + 1);
+            stock.setQuantityToCharge(stock.getQuantityToCharge() + 3);
+            stock.setRemainStock(stock.getRemainStock() - 3);
+            stock.setRemainBuyQuantity(stock.getRemainBuyQuantity() - 3);
+        }
+    }
+
     public static boolean askBuyWithoutPromotion(String name, int remainingQuantity) {
         String answer = view.input.outOfStockPromotion(name, remainingQuantity);
         return answer.equalsIgnoreCase("Y");

@@ -6,6 +6,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Items {
+    private static final int ITEM_NAME = 0;
+    private static final int PRICE = 1;
+    private static final int QUANTITY = 2;
+    private static final int PROMOTION_NAME = 3;
+
     private List<Item> items;
 
     public Items() {
@@ -16,19 +21,31 @@ public class Items {
     private void create() {
         List<List<String>> itemStock = parseItems();
         Map<String, Boolean> itemHasNull = new HashMap<>();
+        addItem(itemStock, itemHasNull);
+        addNullItem(itemHasNull);
+    }
+
+    private void addItem(List<List<String>> itemStock, Map<String, Boolean> itemHasNull) {
         for (List<String> itemInfo : itemStock) {
-            String name = itemInfo.get(0);
-            int price = Integer.parseInt(itemInfo.get(1));
-            int quantity = Integer.parseInt(itemInfo.get(2));
-            String promotion = itemInfo.get(3);
+            String name = itemInfo.get(ITEM_NAME);
+            int price = Integer.parseInt(itemInfo.get(PRICE));
+            int quantity = Integer.parseInt(itemInfo.get(QUANTITY));
+            String promotion = itemInfo.get(PROMOTION_NAME);
+
             items.add(new Item(name, price, quantity, promotion));
 
-            itemHasNull.putIfAbsent(name, false); //f
-            if (promotion.equals("null")) {
-                itemHasNull.put(name, true);
-            }
+            hasItemNull(itemHasNull, name, promotion);
         }
+    }
 
+    private static void hasItemNull(Map<String, Boolean> itemHasNull, String name, String promotion) {
+        itemHasNull.putIfAbsent(name, false);
+        if (promotion.equals("null")) {
+            itemHasNull.put(name, true);
+        }
+    }
+
+    private void addNullItem(Map<String, Boolean> itemHasNull) {
         for (Map.Entry<String, Boolean> entry : itemHasNull.entrySet()) {
             if (!entry.getValue()) {
                 String name = entry.getKey();

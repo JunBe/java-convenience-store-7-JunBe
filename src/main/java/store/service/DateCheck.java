@@ -15,12 +15,13 @@ public class DateCheck {
     private static final int DAY = 2;
     private static final int START_DATE = 3;
     private static final int END_DATE = 4;
+    private static final int PROMOTION_NAME = 0;
 
     public boolean checkNowCanGet(String promotion) {
         List<List<String>> lists = promotionInfo();
         List<String> promotionInfo = new ArrayList<>();
         for (List<String> list : lists) {
-            if (list.get(0).equals(promotion)) {
+            if (list.get(PROMOTION_NAME).equals(promotion)) {
                 promotionInfo = list;
                 break;
             }

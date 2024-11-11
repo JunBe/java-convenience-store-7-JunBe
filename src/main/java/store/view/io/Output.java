@@ -36,12 +36,12 @@ public class Output {
     public void receipt(Cart cart, Payment payment) {
         System.out.println();
         System.out.println("==============W 편의점================");
-        System.out.printf("%10s %10s %10s%n", "상품명", "수량", "금액");
+        System.out.printf("%-10s %10s %10s%n", "상품명", "수량", "금액");
 
         for (String name : cart.getOrder().keySet()) {
             int quantity = cart.getOrder().get(name);
             int price = quantity * cart.getPrice().get(name);
-            System.out.printf("%-10s %10d %10s%n", name, quantity, String.format("%,d", price));
+            System.out.printf("%-10s %10d %13s%n", name, quantity, String.format("%,d", price));
         }
 
         System.out.println("=============증    정===============");
@@ -53,9 +53,9 @@ public class Output {
         }
 
         System.out.println("====================================");
-        System.out.printf("%-10s %10d %10s%n", "총구매액", payment.getTotalCount(), String.format("%,d", payment.getTotalPrice()));
-        System.out.printf("%-10s %20s%n", "행사할인", String.format("%,d", payment.getBonusPrice() * -1));
-        System.out.printf("%-10s %20s%n", "멤버십할인", String.format("%,d", payment.getMembershipDiscount() * -1));
-        System.out.printf("%-10s %20s%n", "내실돈", String.format("%,d", payment.finalPrice()));
+        System.out.printf("%-9s %10d %13s%n", "총구매액", payment.getTotalCount(), String.format("%,d", payment.getTotalPrice()));
+        System.out.printf("%-10s %23s%n", "행사할인", String.format("%,d", payment.getBonusPrice() * -1));
+        System.out.printf("%-9s %23s%n", "멤버십할인", String.format("%,d", payment.getMembershipDiscount() * -1));
+        System.out.printf("%-10s %23s%n", "내실돈", String.format("%,d", payment.finalPrice()));
     }
 }

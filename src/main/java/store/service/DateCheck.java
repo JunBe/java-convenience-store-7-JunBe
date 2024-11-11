@@ -10,6 +10,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DateCheck {
+    private static final int YEAR = 0;
+    private static final int MONTH = 1;
+    private static final int DAY = 2;
+    private static final int START_DATE = 3;
+    private static final int END_DATE = 4;
+
     public boolean checkNowCanGet(String promotion) {
         List<List<String>> lists = promotionInfo();
         List<String> promotionInfo = new ArrayList<>();
@@ -19,24 +25,22 @@ public class DateCheck {
                 break;
             }
         }
+        
+        if (isPromotionActive(promotionInfo)) return true;
+        return false;
+    }
 
-        /** name,buy,get,start_date,end_date
-         * [[탄산2+1,2,1,2024-01-01,2024-12-31],
-         * [MD추천상품,1,1,2024-01-01,2024-12-31],
-         * [반짝할인,1,1,2024-11-01,2024-11-30]]
-         */
+    private static boolean isPromotionActive(List<String> promotionInfo) {
         if (!promotionInfo.isEmpty()) {
             LocalDateTime now = DateTimes.now();
-            String[] start = promotionInfo.get(3).split("-");
-            String[] end = promotionInfo.get(4).split("-");
-
-            LocalDateTime startDate = LocalDateTime.of(Integer.parseInt(start[0]),Integer.parseInt(start[1]),Integer.parseInt(start[2]),0,0,0);
-            LocalDateTime endDate = LocalDateTime.of(Integer.parseInt(end[0]), Integer.parseInt(end[1]), Integer.parseInt(end[2]), 23, 59, 59);
+            String[] start = promotionInfo.get(START_DATE).split("-");
+            String[] end = promotionInfo.get(END_DATE).split("-");
+            LocalDateTime startDate = LocalDateTime.of(Integer.parseInt(start[YEAR]),Integer.parseInt(start[MONTH]),Integer.parseInt(start[DAY]),0,0,0);
+            LocalDateTime endDate = LocalDateTime.of(Integer.parseInt(end[YEAR]), Integer.parseInt(end[MONTH]), Integer.parseInt(end[DAY]), 23, 59, 59);
             if (now.isAfter(startDate) && now.isBefore(endDate)) {
                 return true;
             }
         }
-
         return false;
     }
 

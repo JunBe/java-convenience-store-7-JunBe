@@ -15,6 +15,7 @@ import java.util.Map;
 
 public class ConvenienceController {
     private static ConvenienceView view = new ConvenienceView();
+
     public void start() {
         StockManage stockManage = new StockManage();
         PromotionService promotionService = new PromotionService(stockManage);
@@ -29,33 +30,35 @@ public class ConvenienceController {
     private static boolean isRepurchase(Items items, PromotionService promotionService, boolean repurchase) {
         Cart cart = new Cart();
         view.output.announceProduct(items);
-
-        //사용자에게 구입할 물품 입력받기 ex) [콜라-11],[사이다-2]
         Map<String, Integer> inputItem = inputNameAndQuantity();
         inputItem = checkNoExistItem(inputItem, items);
         inputItem = checkOutOfStock(inputItem, items);
+        findBuyItem(items, promotionService, inputItem, cart);
 
-        //--------------------------------- Items에 있는 Item 탐색하며 구입할 물품 찾기
-        for (String key : inputItem.keySet()) {
-            for (Item item : items.getItems()) {
-                if (item.getName().equals(key)) { // 아이템 찾기
-                    PromotionResult result = promotionService.applyPromotion(item, inputItem.get(key));
-                    inputItem.put(key, result.getRemainBuyQuantity());
-                    if (inputItem.get(key) == 0) {
-                        cart.addItem(item.getName(), result.getQuantityToCharge(), result.getBonusQuantity(), item.getPrice(), item.getPromotion());
-                        break;
-                    }
-                }
-            }
-        }
-
-        //멤버십 할인 및 계산
         Payment payment = new Payment(cart);
         payment.membershipSale();
 
-        //영수증 출력 및 추가 구매
-        repurchase = isRepurchaseAndPrintReceipt(cart, payment, repurchase);
-        return repurchase;
+        return isRepurchaseAndPrintReceipt(cart, payment, repurchase);
+    }
+
+    private static void findBuyItem(Items items, PromotionService promotionService, Map<String, Integer> inputItem, Cart cart) {
+        for (String key : inputItem.keySet()) {
+            for (Item item : items.getItems()) {
+                if (findItem(promotionService, inputItem, cart, key, item)) break;
+            }
+        }
+    }
+
+    private static boolean findItem(PromotionService promotionService, Map<String, Integer> inputItem, Cart cart, String key, Item item) {
+        if (item.getName().equals(key)) {
+            PromotionResult result = promotionService.applyPromotion(item, inputItem.get(key));
+            inputItem.put(key, result.getRemainBuyQuantity());
+            if (inputItem.get(key) == 0) {
+                cart.addItem(item.getName(), result.getQuantityToCharge(), result.getBonusQuantity(), item.getPrice(), item.getPromotion());
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean isRepurchaseAndPrintReceipt(Cart cart, Payment payment, boolean repurchase) {
@@ -96,7 +99,7 @@ public class ConvenienceController {
         return inputItem;
     }
 
-    private static Map<String,Integer> inputNameAndQuantity() {
+    private static Map<String,Integer> inputNameAndQuantity() { //고치기
         Map<String, Integer> itemInfo = new HashMap<>();
         while (true) {
             String[] split = view.input.itemNameAndQuantity().split(",");

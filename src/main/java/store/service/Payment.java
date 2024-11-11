@@ -42,9 +42,8 @@ public class Payment {
             totalCount += cart.getOrder().get(key);
             totalPrice += cart.getOrder().get(key) * cart.getPrice().get(key);
             bonusPrice += cart.getFreeOrder().get(key) * cart.getPrice().get(key);
-            //멤버십 할인 위함
             if (cart.getFreeOrder().get(key) > 0) {
-                promotionPrice += bonusPrice * cart.getPromotion().get(key);
+                promotionPrice += cart.getFreeOrder().get(key) * cart.getPrice().get(key) * cart.getPromotion().get(key);
             }
 
         }

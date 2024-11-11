@@ -53,8 +53,8 @@ public class ConvenienceController {
         if (item.getName().equals(key)) {
             PromotionResult result = promotionService.applyPromotion(item, inputItem.get(key));
             inputItem.put(key, result.getRemainBuyQuantity());
+            cart.addItem(item.getName(), result.getQuantityToCharge(), result.getBonusQuantity(), item.getPrice(), item.getPromotion()); //여기가 널
             if (inputItem.get(key) == 0) {
-                cart.addItem(item.getName(), result.getQuantityToCharge(), result.getBonusQuantity(), item.getPrice(), item.getPromotion());
                 return true;
             }
         }

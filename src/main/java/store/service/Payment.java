@@ -45,7 +45,6 @@ public class Payment {
             if (cart.getFreeOrder().get(key) > 0) {
                 promotionPrice += cart.getFreeOrder().get(key) * cart.getPrice().get(key) * cart.getPromotion().get(key);
             }
-
         }
     }
 

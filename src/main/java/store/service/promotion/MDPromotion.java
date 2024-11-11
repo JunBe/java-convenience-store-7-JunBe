@@ -37,13 +37,18 @@ public class MDPromotion implements PromotionSelect {
             return promotionResult;
         }
 
-        if (remainBuyQuantity == 1 && askGetPromotionItem(item.getName())) { //1+1
-            bonusQuantity++;
-            remainStock -= 2;
-            quantityToCharge += 2;
+        if (remainBuyQuantity == 1) { //1+1
+            if (askGetPromotionItem(item.getName())) {
+                bonusQuantity++;
+                remainStock -= 2;
+                quantityToCharge += 2;
+                remainBuyQuantity -= 1;
+                promotionResult.setAll(quantityToCharge, bonusQuantity, remainStock, remainBuyQuantity);
+                return promotionResult;
+            }
+            remainStock -= 1;
+            quantityToCharge += 1;
             remainBuyQuantity -= 1;
-            promotionResult.setAll(quantityToCharge, bonusQuantity, remainStock, remainBuyQuantity);
-            return promotionResult;
         }
 
         promotionResult.setAll(quantityToCharge, bonusQuantity, remainStock, remainBuyQuantity);

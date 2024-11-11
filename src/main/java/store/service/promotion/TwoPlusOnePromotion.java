@@ -1,63 +1,64 @@
 package store.service.promotion;
 
 import store.model.Item;
+import store.model.StockManagement;
 import store.view.ConvenienceView;
 
 public class TwoPlusOnePromotion implements PromotionSelect{
     private static ConvenienceView view = new ConvenienceView();
+
     @Override
-    public PromotionResult applyPromotion(Item item, int quantity,PromotionResult promotionResult) {
-        int quantityToCharge = 0;
-        int bonusQuantity = 0;
-        int remainStock = item.getQuantity(); //10
-        int remainBuyQuantity = quantity; //7
+    public PromotionResult applyPromotion(Item item, int quantity, PromotionResult promotionResult) {
+        StockManagement stock = new StockManagement(0, 0, item.getQuantity(), quantity);
 
-        while (remainStock >= 3 && remainBuyQuantity >= 3) {
-            bonusQuantity++; //2
-            quantityToCharge += 3; //6
-            remainStock -= 3; //4
-            remainBuyQuantity -= 3; //1
-        }//1 5
+        while (stock.getRemainStock() >= 3 && stock.getRemainBuyQuantity() >= 3) {
+            stock.setBonusQuantity(stock.getBonusQuantity() + 1);
+            stock.setQuantityToCharge(stock.getQuantityToCharge() + 3);
+            stock.setRemainStock(stock.getRemainStock() - 3);
+            stock.setRemainBuyQuantity(stock.getRemainBuyQuantity() - 3);
+        }
 
-        if (remainStock == 0 || remainBuyQuantity == 0) { //9 6 / 6 3 / 3 0
-            promotionResult.setAll(quantityToCharge, bonusQuantity, remainStock, remainBuyQuantity);
+        if (stock.getRemainStock() == 0 || stock.getRemainBuyQuantity() == 0) {
+            promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
             return promotionResult;
-        }//6,2,3,0
+        }
 
-        if (remainStock < remainBuyQuantity) { //10 14 1 5
-            if (askBuyWithoutPromotion(item.getName(), remainBuyQuantity)) { // 정상가 구매?
-                quantityToCharge += remainStock;
-                remainBuyQuantity -= remainStock;
-                remainStock -= remainStock;
-                promotionResult.setAll(quantityToCharge, bonusQuantity, remainStock, remainBuyQuantity);
+        if (stock.getRemainStock() <= stock.getRemainBuyQuantity()) {
+            if (askBuyWithoutPromotion(item.getName(), stock.getRemainBuyQuantity())) {
+                stock.setQuantityToCharge(stock.getQuantityToCharge() + stock.getRemainStock());
+                stock.setRemainBuyQuantity(stock.getRemainBuyQuantity() - stock.getRemainStock());
+                stock.setRemainStock(0);
+                promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
                 return promotionResult;
             }
-            remainBuyQuantity = 0;
-            promotionResult.setAll(quantityToCharge, bonusQuantity, remainStock, remainBuyQuantity);
+            stock.setRemainBuyQuantity(0);
+            promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
             return promotionResult;
         }
 
-        if (remainBuyQuantity == 1) { //7 4 -> 4 1
-            quantityToCharge += 1;
-            remainBuyQuantity -= 1;
-            remainStock -= 1;
-            promotionResult.setAll(quantityToCharge, bonusQuantity, remainStock, remainBuyQuantity);
+        if (stock.getRemainBuyQuantity() == 1) {
+            stock.setQuantityToCharge(stock.getQuantityToCharge() + 1);
+            stock.setRemainBuyQuantity(stock.getRemainBuyQuantity() - 1);
+            stock.setRemainStock(stock.getRemainStock() - 1);
+            promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
             return promotionResult;
         }
 
-        if (remainBuyQuantity == 2) { //5 2 3 2 2 2
-            quantityToCharge += 2;
-            remainBuyQuantity -= 2; // 0
-            remainStock -= 2;
-            if ((remainStock > remainBuyQuantity) && askGetPromotionItem(item.getName())) {
-                quantityToCharge += 1;
-                bonusQuantity++;
-                remainStock--;
+        if (stock.getRemainBuyQuantity() == 2) {
+            stock.setQuantityToCharge(stock.getQuantityToCharge() + 2);
+            stock.setRemainBuyQuantity(stock.getRemainBuyQuantity() - 2);
+            stock.setRemainStock(stock.getRemainStock() - 2);
+
+            if ((stock.getRemainStock() > stock.getRemainBuyQuantity()) && askGetPromotionItem(item.getName())) {
+                stock.setQuantityToCharge(stock.getQuantityToCharge() + 1);
+                stock.setBonusQuantity(stock.getBonusQuantity() + 1);
+                stock.setRemainStock(stock.getRemainStock() - 1);
             }
-            promotionResult.setAll(quantityToCharge, bonusQuantity, remainStock, remainBuyQuantity);
+            promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
             return promotionResult;
         }
-        promotionResult.setAll(quantityToCharge, bonusQuantity, remainStock, remainBuyQuantity);
+
+        promotionResult.setAll(stock.getQuantityToCharge(), stock.getBonusQuantity(), stock.getRemainStock(), stock.getRemainBuyQuantity());
         return promotionResult;
     }
     public static boolean askBuyWithoutPromotion(String name, int remainingQuantity) {

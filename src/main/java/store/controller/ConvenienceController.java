@@ -53,7 +53,7 @@ public class ConvenienceController {
         if (item.getName().equals(key)) {
             PromotionResult result = promotionService.applyPromotion(item, inputItem.get(key));
             inputItem.put(key, result.getRemainBuyQuantity());
-            cart.addItem(item.getName(), result.getQuantityToCharge(), result.getBonusQuantity(), item.getPrice(), item.getPromotion()); //여기가 널
+            cart.addItem(item.getName(), result.getQuantityToCharge(), result.getBonusQuantity(), item.getPrice(), item.getPromotion());
             if (inputItem.get(key) == 0) {
                 return true;
             }
@@ -99,7 +99,7 @@ public class ConvenienceController {
         return inputItem;
     }
 
-    private static Map<String,Integer> inputNameAndQuantity() { //고치기
+    private static Map<String,Integer> inputNameAndQuantity() {
         Map<String, Integer> itemInfo = new HashMap<>();
         while (true) {
             String[] split = view.input.itemNameAndQuantity().split(",");

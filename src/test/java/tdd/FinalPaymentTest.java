@@ -20,20 +20,10 @@ public class FinalPaymentTest {
         promotionQuantity=3;
         promotionSale = "Y";
         membershipSale = "Y";
-        /**
-         * 30000
-         * 프로모션 할인 3000원
-         * 21000원의 30% = 멤버십 할인 -> 6300원
-         * 20700원 최종
-         */
 
         //when
-//        String orderInput = "[콜라-10],[사이다-3]";
-//        String[] split = orderInput.split(",");
-//        List<Integer> orderList = Arrays.asList(split);
-
         totalPrice = price * orderQuantity;
-        if (promotionSale.equals("Y")) {//2+1 일경우만 생각
+        if (promotionSale.equals("Y")) {
             promotionSalePrice = promotionQuantity / 3 * price;
         }
 

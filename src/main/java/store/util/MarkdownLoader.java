@@ -12,7 +12,6 @@ public class MarkdownLoader {
     private static void readLine(String fileName, StringBuilder content) {
         try (InputStream inputStream = MarkdownLoader.class.getClassLoader().getResourceAsStream(fileName);
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-
             String line;
             while ((line = reader.readLine()) != null) {
                 content.append(line).append("\n");

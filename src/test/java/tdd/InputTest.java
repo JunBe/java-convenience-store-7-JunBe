@@ -3,13 +3,11 @@ package tdd;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import store.controller.ConvenienceController;
 import store.util.ErrorMessage;
 import store.validator.Validator;
 import store.view.ConvenienceView;
 
 public class InputTest {
-    ConvenienceView view = new ConvenienceView();
     @DisplayName("구매할 상품 입력의 형식이 다를 경우 예외 발생")
     @Test
     void 구매할_상품_입력의_형식이_다를_경우_예외_발생() {
